@@ -12,5 +12,9 @@ namespace Authentication.Core.Services
         Task<Response<UserAppDto>> CreateUserAsync(CreateUserDto createUserDto);
 
         Task<Response<UserAppDto>> GetUserByNameAsync(string userName);
+        Task<Response<CreateRoleDto>> CreateRole(CreateRoleDto roleName);
+        Task<Response<UserRoleMappingDto>> AddUserRoleMapping(UserRoleMappingDto userRoleMappingDto);
+        Task<Response<List<string>>> GetUserRoles(string userName);
+        Task<Response<UserRoleMappingDto>> RemoveUserFromRole(UserRoleMappingDto userRoleMappingDto);
     }
 }
