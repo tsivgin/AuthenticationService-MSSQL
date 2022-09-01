@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Reflection;
 using Authentication.Core.Configuration;
 using Authentication.Core.Model;
+using Authentication.Core.MongoDb;
 using Authentication.Core.Repositories;
 using Authentication.Core.Services;
 using Authentication.Core.UnitOfWork;
@@ -17,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using SharedLibrary.Configurations;
 using SharedLibrary.Services;
 
@@ -42,13 +44,17 @@ builder.Services.AddScoped(typeof(IServiceGeneric<,>), typeof(GenericService<,>)
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
-builder.Services.AddDbContext<AppDbContext>(x =>
-{
-    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), option =>
-    {
-        option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
-    });
-});
+builder.Services.Configure<DatabaseSettings>(
+    builder.Configuration.GetSection("AuthenticationDatabase"));
+// builder.Services.AddSingleton<IDatabaseSettings>(db => db.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+    
+// builder.Services.AddDbContext<AppDbContext>(x =>
+// {
+//     x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"), option =>
+//     {
+//         option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
+//     });
+// });
 
 builder.Services.AddIdentity<UserApp, IdentityRole>(Opt =>
 {
